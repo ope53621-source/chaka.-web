@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Game Teka-Teki Banyak Soal</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+        text-align: center;
+        padding-top: 50px;
+    }
+    #container {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        display: inline-block;
+        box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        width: 350px;
+    }
+    input {
+        padding: 8px;
+        width: 90%;
+        margin-top: 10px;
+    }
+    button {
+        padding: 8px 15px;
+        margin-top: 10px;
+        cursor: pointer;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+    }
+    #result {
+        margin-top: 15px;
+        font-weight: bold;
+    }
+</style>
+</head>
+<body>
+
+<div id="container">
+    <h2>Game Teka-Teki</h2>
+    <p id="question"></p>
+    <input type="text" id="answer" placeholder="Tulis jawabanmu...">
+    <br>
+    <button onclick="checkAnswer()">Cek Jawaban</button>
+    <p id="result"></p>
+</div>
+
+<script>
+    // Daftar soal dan jawaban
+    const questions = [
+        { q: "Aku punya 4 kaki tapi tidak bisa berjalan. Apakah aku?", a: "kursi" },
+        { q: "Benda yang selalu naik tapi tidak pernah turun?", a: "umur" },
+        { q: "Semakin diisi semakin ringan. Apakah itu?", a: "balon" },
+        { q: "Aku punya leher tapi tidak punya kepala. Apakah aku?", a: "botol" },
+        { q: "Benda yang bisa memantulkan wajahmu?", a: "cermin" }
+    ];
+
+    let currentIndex = 0;
+    let score = 0;
+    let usedIndexes = [];
+
+    // Fungsi ambil soal acak
+    function getRandomQuestion() {
+        if (usedIndexes.length === questions.length) {
+            document.getElementById("container").innerHTML = `
+                <h2>Game Selesai 🎉</h2>
+                <p>Skor kamu: ${score} dari ${questions.length}</p>
+                <button onclick="location.reload()">Main Lagi</button>
+            `;
+            return;
+        }
+
+        let randomIndex;
+        do {
+            randomIndex = Math.floor(Math.random() * questions.length);
+        } while (usedIndexes.includes(randomIndex));
+
+        usedIndexes.push(randomIndex);
+        currentIndex = randomIndex;
+        document.getElementById("question").textContent = questions[currentIndex].q;
+        document.getElementById("answer").value = "";
+        document.getElementById("result").textContent = "";
+    }
+
+    // Cek jawaban
+    function checkAnswer() {
+        let userAnswer = document.getElementById("answer").value.toLowerCase().trim();
+        let result = document.getElementById("result");
+
+        if (userAnswer === questions[currentIndex].a) {
+            score++;
+            result.style.color = "green";
+            result.textContent = "Benar! 🎉";
+        } else {
+            result.style.color = "red";
+            result.textContent = `Salah! Jawaban benar: ${questions[currentIndex].a}`;
+        }
+
+        setTimeout(getRandomQuestion, 1500);
+    }
+
+    // Mulai game
+    getRandomQuestion();
+</script>
+
+</body>
+</html>
